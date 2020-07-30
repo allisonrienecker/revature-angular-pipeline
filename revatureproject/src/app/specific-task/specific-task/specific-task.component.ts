@@ -3,6 +3,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { TodosService } from 'src/app/services/todos.service';
 import { ActivatedRoute } from '@angular/router';
 import { getLocaleDateFormat } from '@angular/common';
+import { literalMap } from '@angular/compiler';
 
 @Component({
   selector: 'app-specific-task',
@@ -21,7 +22,7 @@ export class SpecificTaskComponent implements OnInit {
 
   todoWithId = new FormGroup({
     title: new FormControl(''),
-    id: new FormControl('')
+    // id: new FormControl('')
   });
 
 //  todosFull: ITodos[];
@@ -35,7 +36,7 @@ export class SpecificTaskComponent implements OnInit {
   currentId = '0';
   currentTitle = '';
   currentStatus = '';
-  currentCreateDate = ''; 
+  currentCreateDate = '';
 
   constructor(private route: ActivatedRoute, private todoServ: TodosService) { }
 
@@ -45,18 +46,25 @@ export class SpecificTaskComponent implements OnInit {
     this.todoServ.postTodo(form).subscribe(
       () => {
         // console.log('post success');
+        // this function is performed in service class by post method: json takes the http response to create form
+      }
+    );
+  }
+
+  getTodosEc2() {
+    this.todoServ.getTodos().subscribe(
+      response => {
+        console.log(response);
       }
     );
   }
 
   getTodoEc2ById(id) {
     this.todoServ.getTodoById(id).subscribe(
-      response => {
-        this.currentTitle = response["title"];
-        this.currentStatus = response["completed"];
-        this.currentCreateDate = response["createdOn"];
-        // console.log(this.currentStatus);
-        // console.log(response);
+      response => { // service bring the json responses based on swagger  values: "title", "completed", "createdOn"
+      this.currentTitle = response["title"];
+      this.currentStatus = response["completed"];
+      this.currentCreateDate = response["createdOn"];
       }
     );
   }
@@ -64,12 +72,7 @@ export class SpecificTaskComponent implements OnInit {
   deleteTodoEc2ById(id) {
     console.log('id in deleteTodoEc2ById: ' + id);
     this.todoServ.deleteTodoById(id).subscribe(
-      response => {
-        // this.currentTitle = response["title"];
-        // this.currentStatus = response["complete"];
-        // this.currentCreateDate = response["createdOn"];
-        // console.log(response);
-        // console.log('Todo #' + id + ' Deleted');
+      () => { // this function is performed in service class by delete method and brought by http response
       }
     );
   }
@@ -77,8 +80,9 @@ export class SpecificTaskComponent implements OnInit {
   completeTodoEc2ById(id) {
     console.log('id in completeTodoEc2ById: ' + id);
     this.todoServ.completeTodoById(id).subscribe(
-      response => {
+      () => {
         // console.log('Todo #' + id + ' marked completed');
+        // this function is performed in service class by patch method and brought by http response
       }
     );
   }
@@ -89,22 +93,23 @@ export class SpecificTaskComponent implements OnInit {
     this.todoServ.putTodo(form).subscribe(
       () => {
         // console.log('update success');
+        // this function is performed in service class by put method and brought by http response
       }
     );
   }
 
-  putTodoEc22(tempid:string, temptask: string, tempdate: string, tempstatus: string) {
+  putTodoEc22(tempid: string, temptask: string, tempdate: string, tempstatus: string) {
     // console.log('id in putTodoEc22: ' + tempid);
     // console.log('task in putTodoEc22: ' + temptask);
     // console.log('date in putTodoEc22: ' + tempdate);
     // console.log('status in putTodoEc22: ' + tempstatus);
     let date: Date = new Date();
     // let month: string = '0'
-    // let day: string = 
+    // let day: string =
     let formattedDate: string = date.getFullYear() + '-' + '07' + '-' + date.getDate();
 //    let formattedDate: string = date.getFullYear() + '-' + date.getMonth() + '-' + date.getDate();
     // console.log('formatted Date: ' + formattedDate);
-    let form = {id: tempid, title: temptask, createdOn: formattedDate, completed: false}
+    let form = {id: tempid, title: temptask, createdOn: formattedDate, completed: false};
     //    let form = JSON.stringify(todoSub.value);
     // console.log('putTodoEc22 form:' + form);
     this.todoServ.putTodo(form).subscribe(
