@@ -2,7 +2,7 @@
   <form [formGroup]="task">
     <input type="text" formControlName="title" placeholder="Create a new task">
     <a routerLink="/newtaskcreated" class="btn btn-primary" color=white button (click)='postTodoEc2(task)'>Create New Task</a>
-    <!-- <button (click)='postTodoEc2(task)'>Create New Task </button> -->
+    <!-- click task in postTodoEc2() is an object of FormGroup (todoSub) passed on as json response via todoServ(service) -->
   </form>
 </div>
 

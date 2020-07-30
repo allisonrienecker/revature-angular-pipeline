@@ -17,10 +17,8 @@ export class CreateNewTaskComponent implements OnInit {
 
   postTodoEc2(todoSub: FormGroup) {
     let form = JSON.stringify(todoSub.value);
-    // console.log('form in postTodoEC2: ' + form);
     this.todoServ.postTodo(form).subscribe(
       () => {
-        // console.log('post success');
       }
     );
   }
